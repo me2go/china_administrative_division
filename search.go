@@ -17,3 +17,19 @@ func Search(code string) ([]string, bool) {
 	}
 	return nil, false
 }
+
+func ExtractDivision(s string) []string {
+	segs := []string{}
+	divisionIndexer.WalkPath(s, func(k string, v interface{}) error {
+		segs = nil
+		ds, _ := v.([]crawler.Division)
+		if len(ds) == 0 {
+			return nil
+		}
+		for _, d := range ds {
+			segs = append(segs, d.Name)
+		}
+		return nil
+	})
+	return segs
+}

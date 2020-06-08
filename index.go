@@ -8,6 +8,8 @@ import (
 )
 
 var indexer = trie.NewRuneTrie()
+var divisionIndexer = trie.NewRuneTrie()
+
 var items []crawler.Division
 
 func init() {
@@ -16,6 +18,22 @@ func init() {
 	}
 	for _, item := range items {
 		indexer.Put(item.Code, item)
+	}
+
+	for _, item := range items {
+		ds := []crawler.Division{}
+		indexer.WalkPath(item.Code, func(key string, v interface{}) error {
+			d, _ := v.(crawler.Division)
+			ds = append(ds, d)
+			return nil
+		})
+		if len(ds) > 1 {
+			key := ""
+			for _, d := range ds {
+				key += d.Name
+			}
+			divisionIndexer.Put(key, ds)
+		}
 	}
 }
 
