@@ -22,7 +22,7 @@ func extractDivision(s *goquery.Selection) Division {
 		return Division{}
 	}
 	return Division{
-		Code: strings.Trim(s.Eq(0).Text(), " "),
+		Code: strings.Trim(s.Eq(0).Text(), " 0"),
 		Name: strings.Trim(s.Eq(1).Contents().Not("span").Text(), " "),
 	}
 }

@@ -1,18 +1,14 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
 
-	"github.com/me2go/china-administrative-division/crawler"
+	"github.com/me2go/china_administrative_division/crawler"
 )
-
-var template = `package data
-var Divisions = %s
-`
 
 func main() {
 	divisions, err := crawler.Crawler()
@@ -26,6 +22,13 @@ func main() {
 		return
 	}
 
-	content := fmt.Sprintf(template, string(data))
-	ioutil.WriteFile("data/data.go", []byte(content), os.FileMode(0755))
+	buf := bytes.NewBuffer([]byte{})
+	buf.WriteString("package china_administrative_division")
+	buf.WriteString("\n")
+	buf.WriteString("var Divisions = ")
+	buf.WriteString("`")
+	buf.Write(data)
+	buf.WriteString("`\n")
+
+	ioutil.WriteFile("divisions.go", buf.Bytes(), os.FileMode(0644))
 }
