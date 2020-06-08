@@ -8,13 +8,21 @@ import (
 )
 
 var indexer = trie.NewRuneTrie()
+var items []crawler.Division
 
 func init() {
-	var items []crawler.Division
 	if err := json.Unmarshal([]byte(Divisions), &items); err != nil {
 		panic(err)
 	}
 	for _, item := range items {
 		indexer.Put(item.Code, item)
 	}
+}
+
+func AllDivisions() []string {
+	names := []string{}
+	for _, d := range items {
+		names = append(names, d.Name)
+	}
+	return names
 }
