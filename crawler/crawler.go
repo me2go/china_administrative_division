@@ -17,41 +17,12 @@ type Division struct {
 	Name string `json:"name"`
 }
 
-func TrimLeftN(s string, cutset string, n int) string {
-	if n == 0 {
-		return s
-	}
-	cutsetrunes := []rune(cutset)
-
-	inCutset := func(r rune) bool {
-		for _, s := range cutsetrunes {
-			if r == s {
-				return true
-			}
-		}
-		return false
-	}
-	runes := []rune(s)
-	count := len(runes)
-	for i := count - 1; i >= 0; i-- {
-		if !inCutset(runes[i]) {
-			break
-		}
-		count--
-		n--
-		if n == 0 {
-			break
-		}
-	}
-	return string(runes[0:count])
-}
-
 func extractDivision(s *goquery.Selection) Division {
 	if s.Size() < 2 {
 		return Division{}
 	}
 	return Division{
-		Code: TrimLeftN(strings.Trim(s.Eq(0).Text(), " "), "0", 4),
+		Code: strings.Trim(s.Eq(0).Text(), " "),
 		Name: strings.Trim(s.Eq(1).Contents().Not("span").Text(), " "),
 	}
 }

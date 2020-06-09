@@ -17,7 +17,7 @@ func init() {
 		panic(err)
 	}
 	for _, item := range items {
-		indexer.Put(item.Code, item)
+		indexer.Put(makeKey(item.Code), item)
 	}
 
 	for _, item := range items {
@@ -35,6 +35,28 @@ func init() {
 			divisionIndexer.Put(key, ds)
 		}
 	}
+}
+
+func makeKey(code string) string {
+	runes := []rune(code)
+
+	if len(runes) <= 1 {
+		return code
+	}
+
+	if len(runes) > 6 {
+		runes = runes[0:6]
+	}
+	cut := len(runes)
+	for i := cut - 1; i >= 1; {
+		if runes[i] != '0' ||
+			runes[i-1] != '0' {
+			break
+		}
+		cut -= 2
+		i -= 2
+	}
+	return string(runes[0:cut])
 }
 
 func AllDivisions() []string {
